@@ -10,8 +10,32 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Play {
+    away_team String
+    home_team String
+
+    posteam String?
+    defteam String?
+
+    desc String
+    down Int?
+    drive Int?
+    drive_start_yard_line String?
+    drive_end_yard_line String?
+    drive_end_transition String?
+    drive_play_count Int?
+    drive_play_id_ended BigInt?
+
+    game_date DateTime
+    game_id String
+
+    play_id String @id
+    play_type String?
+    total_away_score Int
+    total_home_score Int
+
+    time String
+
+    ydstogo Int
+    yrdln String?
 }
