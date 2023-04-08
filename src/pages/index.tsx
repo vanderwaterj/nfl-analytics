@@ -7,7 +7,7 @@ import type { Play } from "@prisma/client";
 import { api } from "~/utils/api";
 
 const getDriveDataFromPlayData = (data: Play[]): Drive[] => {
-    let driveData: Drive[] = [];
+    const driveData: Drive[] = [];
     // For each play in data, check to see if there is a drive in driveData with a matching driveNum to play.drive
     // If there is, add the play to the playData array of that drive
     // If there isn't, create a new drive with the play as the first playData
