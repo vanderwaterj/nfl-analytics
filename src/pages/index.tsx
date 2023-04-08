@@ -1,10 +1,9 @@
 import { type NextPage } from "next";
-import { SignIn, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
-import Link from "next/link";
 import DriveAccordion from "../components/DriveAccordion";
-import { Play } from "@prisma/client";
+import type { Play } from "@prisma/client";
 import { api } from "~/utils/api";
 
 const getDriveDataFromPlayData = (data: Play[]): Drive[] => {
@@ -13,7 +12,7 @@ const getDriveDataFromPlayData = (data: Play[]): Drive[] => {
     // If there is, add the play to the playData array of that drive
     // If there isn't, create a new drive with the play as the first playData
 
-    data.forEach((play, index) => {
+    data.forEach((play) => {
         // If the play does not have a drive, skip it
         if (!play.drive) return;
 
@@ -74,7 +73,6 @@ const Home: NextPage = () => {
   if (isLoading) return <div>Loading...</div>;
   if (!data) return <div>No data...</div>;
 
-  const driveData = getDriveDataFromPlayData(data);
   const gameData = getGameDataFromPlayData(data);
 
   return (

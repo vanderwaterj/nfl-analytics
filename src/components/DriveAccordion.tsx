@@ -44,9 +44,9 @@ export default function DriveAccordion(props: DriveAccordionProps) {
         <>
             {driveData.map((drive, driveIndex) => {
                 return (
-                    <Accordion open={open === driveIndex + 1} icon={<Icon id={driveIndex + 1} open={open} />}>
+                    <Accordion key={driveIndex} open={open === driveIndex + 1} icon={<Icon id={driveIndex + 1} open={open} />}>
                         <AccordionHeader onClick={() => handleOpen(driveIndex + 1)}>
-                            <div key={driveIndex} className="flex w-full justify-between">
+                            <div className="flex w-full justify-between">
                                 <div className="flex flex-row space-x-1 left-0justify-center items-center">
                                     <TeamIcon team={drive.posTeam} sizePx={40} />
                                     <span className="text-sm">{drive.result} - {drive.numPlays} play{drive.numPlays !== 1 ? 's' : ''}</span>
