@@ -1,6 +1,8 @@
+import Image from "next/image";
+
 interface TeamIconProps {
     team: string;
-    sizePx: number;
+    sizePx?: number;
 }
 
 export default function TeamIcon(props: TeamIconProps) {
@@ -9,7 +11,9 @@ export default function TeamIcon(props: TeamIconProps) {
 
     return (
         <>
-            <img src={url} alt={props.team} width={props.sizePx} height={props.sizePx} />
+            <Image src={url} alt={props.team} width={props?.sizePx} height={props?.sizePx}/>
         </>
     )
 }
+
+// <img src={url} alt={props.team} width={props.sizePx} height={props.sizePx} />

@@ -5,8 +5,6 @@ import {
   } from "@material-tailwind/react";
 
 import TeamIcon from "./TeamIcon";
-
-import { Play } from "@prisma/client";
 import { useState } from "react";
 
 interface DriveAccordionProps {
@@ -28,8 +26,7 @@ function Icon({ id, open }:{id: number, open: number}) {
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
       </svg>
     );
-};
-
+}
 
 export default function DriveAccordion(props: DriveAccordionProps) {
     const [open, setOpen] = useState(-1);
@@ -49,7 +46,7 @@ export default function DriveAccordion(props: DriveAccordionProps) {
                 return (
                     <Accordion open={open === driveIndex + 1} icon={<Icon id={driveIndex + 1} open={open} />}>
                         <AccordionHeader onClick={() => handleOpen(driveIndex + 1)}>
-                            <div className="flex w-full justify-between">
+                            <div key={driveIndex} className="flex w-full justify-between">
                                 <div className="flex flex-row space-x-1 left-0justify-center items-center">
                                     <TeamIcon team={drive.posTeam} sizePx={40} />
                                     <span className="text-sm">{drive.result} - {drive.numPlays} play{drive.numPlays !== 1 ? 's' : ''}</span>

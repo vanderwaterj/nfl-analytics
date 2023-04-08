@@ -1,4 +1,4 @@
-import { Play } from "@prisma/client";
+import type { Play } from "@prisma/client";
 
 declare global {
     export type Drive = {
