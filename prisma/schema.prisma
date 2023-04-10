@@ -17,19 +17,19 @@ model Play {
     posteam String?
     defteam String?
 
-    desc String
+    desc String @db.VarChar(2000)
     down Int?
     drive Int?
     drive_start_yard_line String?
     drive_end_yard_line String?
     drive_end_transition String?
     drive_play_count Int?
-    drive_play_id_ended BigInt?
+    drive_play_id_ended String?
 
     game_date DateTime
     game_id String
 
-    play_id String @id
+    play_id String
     play_type String?
     total_away_score Int
     total_home_score Int
@@ -38,4 +38,6 @@ model Play {
 
     ydstogo Int
     yrdln String?
+
+    @@unique([game_id, play_id])
 }

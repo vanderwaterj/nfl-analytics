@@ -1,8 +1,4 @@
-import {
-    Accordion,
-    AccordionHeader,
-    AccordionBody,
-  } from "@material-tailwind/react";
+import { Accordion, Table } from '@mantine/core';
 
 import TeamIcon from "./TeamIcon";
 import { useState } from "react";
@@ -31,52 +27,61 @@ function Icon({ id, open }:{id: number, open: number}) {
 export default function DriveAccordion(props: DriveAccordionProps) {
     const [open, setOpen] = useState(-1);
 
-    const handleOpen = (value: number) => {
-        setOpen(open == value ? 0 : value);
-    }
-
     const gameData = props.gameData;
     const driveData = gameData.driveData;
 
     if (!driveData) return <div>No data...</div>;
 
     return (
-        <>
+        <Accordion>
             {driveData.map((drive, driveIndex) => {
                 return (
-                    <Accordion key={driveIndex} open={open === driveIndex + 1} icon={<Icon id={driveIndex + 1} open={open} />}>
-                        <AccordionHeader onClick={() => handleOpen(driveIndex + 1)}>
+                    <Accordion.Item key={driveIndex} value={driveIndex.toString()}>
+                        <Accordion.Control>
                             <div className="flex w-full justify-between">
-                                <div className="flex flex-row space-x-1 left-0justify-center items-center">
-                                    <TeamIcon team={drive.posTeam} sizePx={40} />
+                                <div className="flex flex-row space-x-1 left-0 justify-center items-center">
+                                    <TeamIcon team={drive.posTeam} sizePx={20} />
                                     <span className="text-sm">{drive.result} - {drive.numPlays} play{drive.numPlays !== 1 ? 's' : ''}</span>
                                 </div>
-                                <div className="flex flex-row space-x-2 right-0">
+                                <div className="flex flex-row space-x-2 right-0 items-center">
                                     <div className="flex flex-col">
                                         <TeamIcon team={gameData.homeTeam} sizePx={20} />
-                                        <span className="text-sm">{drive.homeScoreAfterDrive}</span>
+                                        <span className="text-sm text-center">{drive.homeScoreAfterDrive}</span>
                                     </div>
                                     <div className="flex flex-col">
                                         <TeamIcon team={gameData.awayTeam} sizePx={20} />
-                                        <span className="text-sm">{drive.awayScoreAfterDrive}</span>
+                                        <span className="text-sm text-center">{drive.awayScoreAfterDrive}</span>
                                     </div>     
-                                </div>  
+                                </div> 
                             </div>
-                        </AccordionHeader>
-                        <AccordionBody>
-                            <ul className="flex flex-col" key={driveIndex + 1}>
-                                {drive?.playData.map((play, playIndex) => {
-                                    return (
-                                        <li key={playIndex + 1}>
-                                            {play.desc}
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </AccordionBody>
-                    </Accordion>
-                )
-            })}
-        </>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                            <Table>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Down & Distance</th>
+                                        <th>Yard Line</th>
+                                        <th>Time</th>
+                                    </tr>
+                                    {
+                                        drive?.playData.map((play, playIndex) => {
+                                            return (
+                                                <tr key={playIndex + 1}>
+                                                    <td>{play.desc}</td>
+                                                    {(play.down) ? <td>{play.down} & {play.ydstogo}</td> : <td></td>}
+                                                    <td>{play.yrdln}</td>
+                                                    <td>{play.time}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </thead>
+                            </Table>
+                        </Accordion.Panel>
+                    </Accordion.Item>
+                )}
+            )}
+        </Accordion>
     )
 }
