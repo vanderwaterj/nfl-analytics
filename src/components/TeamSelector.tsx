@@ -1,9 +1,7 @@
 import { forwardRef, useEffect, useState } from "react";
 import { Select } from '@mantine/core'
 import { api } from "~/utils/api";
-import type { Play } from "@prisma/client";
 import TeamIcon from "./TeamIcon";
-import { getGameDataFromPlayData } from '../utils/PlayUtil'
 
 interface TeamSelectorProps {
     onSelect: (gameId: string) => void;
@@ -33,20 +31,9 @@ const SelectTeamItem = forwardRef<HTMLDivElement, TeamItemProps>(
     )
 );
 
-const SelectGameItem = forwardRef<HTMLDivElement, GameItemProps>(
-    ({home_team, away_team, game_id, ...others}, ref) => (
-        <div ref={ref} {...others}>
-            <TeamIcon team={home_team}/>
-            <TeamIcon team={away_team}/>
-        </div>
-    )
-);
-
 export default function TeamSelector(props: TeamSelectorProps) {
     const teamNames = api.plays.getTeams.useQuery().data!;
     const [teamSelected, setTeamSelected] = useState<string>()
-    const [gameSelected, setGameSelected] = useState<string>()
-    const [hasLoaded, setHasLoaded] = useState<boolean>(false)
 
     // make a query to get the games for the selected team that is disabled by default, and then refetch it teamSelected changes
     const { data: gameData, refetch } = api.plays.getGamesByTeam.useQuery({team: teamSelected!}, { enabled: false })
@@ -54,7 +41,7 @@ export default function TeamSelector(props: TeamSelectorProps) {
         if (teamSelected) {
             refetch()
         }
-    }, [teamSelected])
+    }, [teamSelected, refetch])
 
     const gameDataArr = []
 
@@ -69,8 +56,6 @@ export default function TeamSelector(props: TeamSelectorProps) {
     }
 
     console.log(gameDataArr);
-    
-    const renderGameData:string[] = [];
 
     return (
         <>
@@ -94,7 +79,6 @@ export default function TeamSelector(props: TeamSelectorProps) {
                 placeholder="Select a game"
                 searchable
                 onChange={(value) => {
-                    setGameSelected(value!)
                     props.onSelect(value!)
                 }}
                 />
