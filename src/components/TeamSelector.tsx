@@ -33,7 +33,7 @@ export default function TeamSelector(props: TeamSelectorProps) {
     const { data: gameData, refetch } = api.plays.getGamesByTeam.useQuery({team: teamSelected!}, { enabled: false })
     useEffect(() => {
         if (teamSelected) {
-            refetch()
+            refetch().catch((err) => console.log(err)).then(() => console.log('refetched')).catch(() => 'obligatory catch');
         }
     }, [teamSelected, refetch])
 
