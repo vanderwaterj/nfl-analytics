@@ -1,7 +1,6 @@
 import { Accordion, Table } from '@mantine/core';
 
 import TeamIcon from "./TeamIcon";
-import { useState } from "react";
 
 interface DriveAccordionProps {
     gameData: GameData;

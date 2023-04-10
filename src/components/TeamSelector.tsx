@@ -13,12 +13,6 @@ interface TeamItemProps extends React.ComponentPropsWithoutRef<'div'> {
     description: string;
 }
 
-interface GameItemProps extends React.ComponentPropsWithoutRef<'div'> {
-    home_team: string;
-    away_team: string;
-    game_id: string;
-}
-
 const SelectTeamItem = forwardRef<HTMLDivElement, TeamItemProps>(
     ({label, description, ...others}, ref) => (
         <div ref={ref} {...others}>
@@ -46,7 +40,7 @@ export default function TeamSelector(props: TeamSelectorProps) {
     const gameDataArr = []
 
     if (gameData) {
-        for (const game of gameData!) {
+        for (const game of gameData) {
             gameDataArr.push({
                 homeTeam: game.home_team,
                 awayTeam: game.away_team,
