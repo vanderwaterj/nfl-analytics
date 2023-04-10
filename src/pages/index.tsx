@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { SignInButton, SignOutButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import DriveAccordion from "../components/DriveAccordion";
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
     // api.plays.deleteAll.useQuery();
     const {data, isLoading} = api.plays.getPlaysByGameId.useQuery({gameId: game});
-    const { mutate } = api.plays.create.useMutation();
+    // const { mutate } = api.plays.create.useMutation();
 
      if (isLoading) return <div>Loading...</div>;
     if (!data) return <div>No data...</div>;
