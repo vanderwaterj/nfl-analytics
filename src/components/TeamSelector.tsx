@@ -4,7 +4,6 @@ import { api } from "~/utils/api";
 import type { Play } from "@prisma/client";
 import TeamIcon from "./TeamIcon";
 import { getGameDataFromPlayData } from '../utils/PlayUtil'
-import TeamGameSelector from './TeamGameSelector'
 
 interface TeamSelectorProps {
     onSelect: (gameId: string) => void;
