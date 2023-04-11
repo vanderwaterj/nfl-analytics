@@ -1,15 +1,22 @@
 import { Accordion, Table } from '@mantine/core';
-
 import TeamIcon from "./TeamIcon";
-
+import { useEffect, useState } from 'react'
 interface DriveAccordionProps {
-    gameData: GameData;
+    gameData: GameData | undefined;
 }
 
 export default function DriveAccordion(props: DriveAccordionProps) {
-    const gameData = props.gameData;
-    const driveData = gameData.driveData;
+    const [gameData, setGameData] = useState<GameData | undefined>(props.gameData);
+    const [driveData, setDriveData] = useState<Drive[] | undefined>(props.gameData?.driveData);
 
+    useEffect(() => {
+        if (props.gameData) {
+            setGameData(props.gameData);
+            setDriveData(props.gameData.driveData);
+        }
+    }, [props.gameData])
+
+    if (!gameData) return <div>No data...</div>;
     if (!driveData) return <div>No data...</div>;
 
     return (

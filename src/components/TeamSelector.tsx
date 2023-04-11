@@ -1,10 +1,10 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef,  useState } from "react";
 import { Select } from '@mantine/core'
-import { api } from "~/utils/api";
 import TeamIcon from "./TeamIcon";
 
 interface TeamSelectorProps {
-    onSelect: (gameId: string) => void;
+    onChange: (gameId: string) => void;
+    teams: string[];
 }
 
 interface TeamItemProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -26,47 +26,29 @@ const SelectTeamItem = forwardRef<HTMLDivElement, TeamItemProps>(
 );
 
 export default function TeamSelector(props: TeamSelectorProps) {
-    const teamNames = api.plays.getTeams.useQuery().data!;
+    const teamNames = props.teams;
     const [teamSelected, setTeamSelected] = useState<string>()
-
-    // make a query to get the games for the selected team that is disabled by default, and then refetch it teamSelected changes
-    const { data: gameData, refetch } = api.plays.getGamesByTeam.useQuery({team: teamSelected!}, { enabled: false })
-    useEffect(() => {
-        if (teamSelected) {
-            refetch().catch((err) => console.log(err)).then(() => console.log('refetched')).catch(() => 'obligatory catch');
-        }
-    }, [teamSelected, refetch])
-
-    const gameDataArr = []
-
-    if (gameData) {
-        for (const game of gameData) {
-            gameDataArr.push({
-                homeTeam: game.home_team,
-                awayTeam: game.away_team,
-                gameId: game.game_id,
-            })
-        }
-    }
-
-    console.log(gameDataArr);
 
     return (
         <>
-            <div className="flex w-full justify-between">
-                {teamNames && <Select 
-                    data={teamNames}
-                    placeholder="Select a team"
-                    searchable
-                    itemComponent={SelectTeamItem}
-                    onChange={(value) => {
-                        console.log('ONCHANGE', value)
-                        setTeamSelected(value!)
-                    }}
-                    className="w-1/2"
-                    icon={teamSelected && <TeamIcon team={teamSelected} sizePx={20}/>}
-                />}
-                {teamSelected && <Select 
+            {teamNames && <Select 
+                className="p-1"
+                data={teamNames}
+                placeholder="Select a team"
+                searchable
+                itemComponent={SelectTeamItem}
+                onChange={(value) => {
+                    setTeamSelected(value!)
+                    props.onChange(value!)
+                }}
+                icon={teamSelected && <TeamIcon team={teamSelected} sizePx={20}/>}
+            />}
+        </>
+    )
+}
+
+/**
+ * <Select 
                 data={gameDataArr.map((item) => {
                     return item.gameId
                 })}
@@ -75,9 +57,6 @@ export default function TeamSelector(props: TeamSelectorProps) {
                 onChange={(value) => {
                     props.onSelect(value!)
                 }}
+                className="w-1/2"
                 />
-                }
-            </div>
-        </>
-    )
-}
+ */

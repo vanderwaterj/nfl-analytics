@@ -3,23 +3,44 @@ import { SignInButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import DriveAccordion from "../components/DriveAccordion";
-import TeamSelector from "../components/TeamSelector"
+import TeamGameSelector from "../components/TeamGameSelector"
+import NoData from "../components/NoData";
 import { api } from "~/utils/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getGameDataFromPlayData } from "../utils/PlayUtil";
 
 const Home: NextPage = () => {
     const user = useUser();
-    const [game, setGame] = useState("2022_01_BUF_LA")
+    const [gameSelected, setGameSelected] = useState('')
+    const [teamSelected, setTeamSelected] = useState<string>()
+    const [gameData, setGameData] = useState<GameData>();
 
     // api.plays.deleteAll.useQuery();
-    const {data, isLoading} = api.plays.getPlaysByGameId.useQuery({gameId: game});
-    // const { mutate } = api.plays.create.useMutation();
+    const { refetch: refetchPlays } = api.plays.getPlaysByGameId.useQuery({gameId: gameSelected}, { enabled: false });
 
-     if (isLoading) return <div>Loading...</div>;
-    if (!data) return <div>No data...</div>;
+    useEffect(() => {
+        if (gameSelected) {
+            refetchPlays().catch((err) => console.log(err)).then((res) => {
+                if (res) {
+                    setGameData(getGameDataFromPlayData(res.data!));
+                    console.log('index.tsx: refetched plays', res.data);
+                }
+            }).catch(() => 'obligatory catch');
+        }
+    }, [gameSelected, refetchPlays])
 
-    const gameData = getGameDataFromPlayData(data);
+    const onSelectTeam = (team: string) => {
+        console.log(gameSelected, gameData)
+        setTeamSelected(team);
+        setGameSelected('');
+        setGameData(undefined);
+        console.log('index.tsx: Team selected', team);
+    }
+
+    const onSelectGame = (game: GameData) => {
+        console.log('index.tsx: Game selected', game.gameId);
+        setGameSelected(game.gameId);
+    }
 
     return (
         <>
@@ -36,10 +57,10 @@ const Home: NextPage = () => {
                     </div>
 
                     <div>
-                        <TeamSelector onSelect={setGame}/>
+                        <TeamGameSelector onSelectTeam={onSelectTeam} onSelectGame={onSelectGame} />
                     </div>
 
-                    {gameData && <DriveAccordion gameData={gameData}/>}
+                    {gameSelected ? <DriveAccordion gameData={gameData}/> : ((!teamSelected) ? <NoData message={'Pick a team!'} /> : <NoData message={'Pick a game!'} />)}
                 </div>
             </main>
         </>
@@ -96,7 +117,6 @@ export default Home;
         })
 
         for (let i = playCount; i < playCount + 500; i++) {
-            // console.log(playData[i])
             mutate(playData[i]);
         }
         setPlayCount(playCount + 500);

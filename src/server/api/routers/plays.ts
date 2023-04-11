@@ -39,7 +39,6 @@ export const playsRouter = createTRPCRouter({
             },
         });
 
-        console.log(plays)
         return plays;
     }),
 

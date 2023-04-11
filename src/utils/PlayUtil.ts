@@ -6,6 +6,8 @@ const getDriveDataFromPlayData = (data: Play[]): Drive[] => {
     // If there is, add the play to the playData array of that drive
     // If there isn't, create a new drive with the play as the first playData
 
+    if (data.length === 0) return driveData;
+
     data.forEach((play) => {
         // If the play does not have a drive, skip it
         if (!play.drive) return;
@@ -52,6 +54,24 @@ const getDriveDataFromPlayData = (data: Play[]): Drive[] => {
 
 export const getGameDataFromPlayData = (data: Play[]): GameData => {
     const driveData = getDriveDataFromPlayData(data);
+
+    if (driveData.length === 0) {
+        if (data[0]) {
+            return ({
+                gameId: data[0].game_id,
+                homeTeam: data[0].home_team,
+                awayTeam: data[0].away_team,
+                driveData: [],
+            } as GameData)
+        } else {
+            return ({
+                gameId: '',
+                homeTeam: '',
+                awayTeam: '',
+                driveData: [],
+            } as GameData)
+        }
+    }
 
     // Get the first drive from driveData, if it exists. Otherwise, return null.
     const firstDrive = driveData[0];
